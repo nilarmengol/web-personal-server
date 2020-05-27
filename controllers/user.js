@@ -7,7 +7,7 @@ function signUp(req, res) {
   const { name, lastname, email, password, repeatPassword } = req.body;
   user.name = name;
   user.lastname = lastname;
-  user.email = email;
+  user.email = email.toLowerCase();
   user.role = "admin";
   user.active = false;
 
@@ -17,14 +17,14 @@ function signUp(req, res) {
     if (password != repeatPassword) {
       res.status(404).send({ message: "Las contraseñas no son iguales" });
     } else {
-      bcrypt.hash(password, null, null, function (err, hash) {
+      bcrypt.hash(password, null, null, function(err, hash) {
         if (err) {
           res.status(500).send({ message: "Error al encriptar la contraseña" });
         } else {
           user.password = hash;
           user.save((err, userStored) => {
             if (err) {
-              res.status(500).send({ message: "EL usuario ya existe" });
+              res.status(500).send({ message: "El usuario ya existe" });
             } else {
               if (!userStored) {
                 res.status(500).send({ message: "Error al crear el usuario." });
@@ -40,5 +40,5 @@ function signUp(req, res) {
 }
 
 module.exports = {
-  signUp,
+  signUp
 };
