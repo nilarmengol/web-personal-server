@@ -19,7 +19,7 @@ exports.createAccessToken = function(user) {
   return jwt.encode(payload, SECRET_KEY);
 };
 
-exports.createRefreshToken = function(user) {
+exports.refreshAccessToken = function(user) {
   const payload = {
     id: user._id,
     exp: moment()
