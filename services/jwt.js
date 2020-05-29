@@ -3,7 +3,7 @@ const moment = require("moment");
 
 const SECRET_KEY = "jdsdhwuTjaskl787453GKHn";
 
-exports.createAccessToken = function(user) {
+exports.createAccessTokenApi = function(user) {
   const payload = {
     id: user._id,
     name: user.name,
@@ -19,7 +19,7 @@ exports.createAccessToken = function(user) {
   return jwt.encode(payload, SECRET_KEY);
 };
 
-exports.refreshAccessToken = function(user) {
+exports.refreshAccessTokenApi = function(user) {
   const payload = {
     id: user._id,
     exp: moment()
