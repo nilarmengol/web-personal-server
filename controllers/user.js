@@ -123,7 +123,7 @@ function uploadAvatar(req, res) {
             user,
             (err, userResult) => {
               if (err) {
-                res.status(500).send({ message: "NError del servidor" });
+                res.status(500).send({ message: "Error del servidor" });
               } else if (!userResult) {
                 res
                   .status(404)
@@ -154,9 +154,20 @@ function getAvatar(req, res) {
   });
 }
 
-function updateUser(req, res) {
-  const userData = req.body;
+async function updateUser(req, res) {
+  let userData = req.body;
+  userData.email = req.body.email.toLowerCase();
   const params = req.params;
+
+  if (userData.password) {
+    await bcrypt.hash(userData.password, null, null, (err, hash) => {
+      if (err) {
+        res.status(500).send({ message: "Error al encriptar la contraseña" });
+      } else {
+        userData.password = hash;
+      }
+    });
+  }
 
   User.findByIdAndUpdate({ _id: params.id }, userData, (err, userUpdate) => {
     if (err) {
