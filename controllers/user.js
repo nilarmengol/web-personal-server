@@ -236,7 +236,7 @@ function SignUpAdmin(req, res) {
           if (!userStored) {
             res.status(500).send({ message: "Erro al crear el nuevo usuario" });
           } else {
-            res.status(200).send({ message: "Usuatio creado correctamente" });
+            res.status(200).send({ message: "Usuario creado correctamente" });
           }
         });
       }
