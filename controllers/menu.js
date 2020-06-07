@@ -66,7 +66,7 @@ function activateMenu(req, res) {
   Menu.findByIdAndUpdate(id, { active }, (err, menusStored) => {
     if (err) {
       res.status(500).send({ message: "Error del servidor" });
-    } else if (!menusUpdated) {
+    } else if (!menusStored) {
       res.status(404).send({ message: "No se ha encontrado el menú" });
     } else if (active === true) {
       res.status(200).send({ message: "Menú activado correctamente" });
