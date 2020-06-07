@@ -19,7 +19,7 @@ function addMenu(req, res) {
   });
 }
 
-function getMenus(req, res) {
+function addMenu(req, res) {
   User.find().then(users => {
     if (!users) {
       res.status(404).send({ message: "No se ha encontrado ningún usuario" });
@@ -45,7 +45,40 @@ function getMenus(req, res) {
     });
 }
 
+function updateMenu(req, res) {
+  let menuData = req.body;
+  const params = req.params;
+  Menu.findByIdAndUpdate(params.id, menuData, (err, menusUpdated) => {
+    if (err) {
+      res.status(500).send({ message: "Error del servidor" });
+    } else if (!menusUpdated) {
+      res.status(404).send({ message: "No se ha encontrado ningún menú" });
+    } else {
+      res.status(200).send({ message: "Menú actualizado correctamente" });
+    }
+  });
+}
+
+function activateMenu(req, res) {
+  const { id } = req.params;
+  const { active } = req.body;
+
+  Menu.findByIdAndUpdate(id, { active }, (err, menusStored) => {
+    if (err) {
+      res.status(500).send({ message: "Error del servidor" });
+    } else if (!menusUpdated) {
+      res.status(404).send({ message: "No se ha encontrado el menú" });
+    } else if (active === true) {
+      res.status(200).send({ message: "Menú activado correctamente" });
+    } else {
+      res.status(200).send({ message: "Menú desactivado correctamente" });
+    }
+  });
+}
+
 module.exports = {
   addMenu,
-  getMenus
+  getMenus,
+  updateMenu,
+  activateMenu
 };
