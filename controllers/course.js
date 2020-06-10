@@ -5,8 +5,11 @@ function addCourse(req, res) {
   const course = new Course(body);
   course.order = 1000;
 
+  console.log(course);
+
   course.save((err, courseStore) => {
     if (err) {
+      console.log(err);
       res.status(400).send({ message: "El curso que estás creando ya existe" });
     } else if (!courseStore) {
       res.status(404).send({ message: "No se ha podido crear el curso" });
