@@ -5,8 +5,6 @@ function addCourse(req, res) {
   const course = new Course(body);
   course.order = 1000;
 
-  console.log(course);
-
   course.save((err, courseStore) => {
     if (err) {
       console.log(err);
@@ -43,11 +41,13 @@ function deleteCourse(req, res) {
 
   Course.findByIdAndRemove(id, (err, courseDeleted) => {
     if (err) {
-      res.status(500).send({ message: "Error del servidor" });
+      res.status(500).send({ code: 500, message: "Error del servidor" });
     } else if (!courseDeleted) {
-      res.status(404).send({ message: "Curso no encontrado" });
+      res.status(404).send({ code: 404, message: "Curso no encontrado" });
     } else {
-      res.status(200).send({ message: "Curso eliminado correctamente" });
+      res
+        .status(200)
+        .send({ code: 200, message: "Curso eliminado correctamente" });
     }
   });
 }
@@ -58,11 +58,13 @@ function updateCourse(req, res) {
 
   Course.findByIdAndUpdate(id, courseData, (err, courseUpdated) => {
     if (err) {
-      res.status(500).send({ message: "Error del servidor" });
+      res.status(500).send({ code: 500, message: "Error del servidor" });
     } else if (!courseUpdated) {
-      res.status(404).send({ message: "Curso no encontrado" });
+      res.status(404).send({ code: 404, message: "Curso no encontrado" });
     } else {
-      res.status(200).send({ message: "Curso actualizado correctamente" });
+      res
+        .status(200)
+        .send({ code: 200, message: "Curso actualizado correctamente" });
     }
   });
 }
