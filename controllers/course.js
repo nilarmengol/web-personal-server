@@ -1,4 +1,6 @@
 const Course = require("../models/course");
+const fs = require("fs");
+const path = require("path");
 
 function addCourse(req, res) {
   const body = req.body;
@@ -69,9 +71,73 @@ function updateCourse(req, res) {
   });
 }
 
+function uploadImage(req, res) {
+  const params = req.params;
+  console.log("hi");
+
+  Course.findById({ _id: params.id }, (err, courseData) => {
+    if (err) {
+      res.status(500).send({ message: "Error del servidor" });
+    } else if (!courseData) {
+      res.status(404).send({ message: "No ha encontrado ningún usuario" });
+    } else {
+      let course = courseData;
+      if (req.files) {
+        let filePath = req.files.image.path;
+        console.log(filePath);
+        let fileSplit = filePath.split("\\");
+        let fileName = fileSplit[2];
+        let extSplit = fileName.split(".");
+        fileExt = extSplit[1];
+
+        if (fileExt !== "png" && fileExt !== "jpg") {
+          res.status(400).send({
+            message:
+              "La extensión de la imagen no es válida. (Extensiones permitidas: .png y .jpg)"
+          });
+        } else {
+          course.image = fileName;
+          Course.findByIdAndUpdate(
+            { _id: params.id },
+            course,
+            (err, courseResult) => {
+              if (err) {
+                res.status(500).send({ message: "Error del servidor" });
+              } else if (!courseResult) {
+                res
+                  .status(404)
+                  .send({ message: "No se ha encontrado ningún usuario" });
+              } else {
+                res.status(200).send({ imageName: fileName });
+              }
+            }
+          );
+        }
+
+        console.log(extSplit);
+      }
+    }
+  });
+}
+
+function getImage(req, res) {
+  const imageName = req.params.imageName;
+  const filePath = "./uploads/image/" + imageName;
+
+  fs.exists(filePath, exists => {
+    if (!exists) {
+      res.status(404).send({ message: "La imagen que buscas no existe" });
+    } else {
+      res.sendFile(path.resolve(filePath));
+    }
+  });
+}
+
 module.exports = {
   addCourse,
   getCourses,
   deleteCourse,
-  updateCourse
+  updateCourse,
+  uploadImage,
+  getImage
 };
