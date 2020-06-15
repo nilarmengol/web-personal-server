@@ -33,7 +33,7 @@ function getCourses(req, res) {
           .status(404)
           .send({ message: "No se han podido encontrar los cursos" });
       } else {
-        res.status(200).send({ code: 200, message: courseStored });
+        res.status(200).send({ code: 200, courses: courseStored });
       }
     });
 }
@@ -73,8 +73,6 @@ function updateCourse(req, res) {
 
 function uploadImage(req, res) {
   const params = req.params;
-  console.log("hi");
-
   Course.findById({ _id: params.id }, (err, courseData) => {
     if (err) {
       res.status(500).send({ message: "Error del servidor" });
@@ -84,7 +82,6 @@ function uploadImage(req, res) {
       let course = courseData;
       if (req.files) {
         let filePath = req.files.image.path;
-        console.log(filePath);
         let fileSplit = filePath.split("\\");
         let fileName = fileSplit[2];
         let extSplit = fileName.split(".");
